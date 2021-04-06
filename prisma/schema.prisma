@@ -1,0 +1,28 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Example models
+// https://www.prisma.io/docs/getting-started/setup-prisma/start-from-scratch-typescript-postgres#create-database-tables-with-prisma-migrate
+
+model ProspectInterview {
+  id        Int      @default(autoincrement()) @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String   @db.VarChar(300)
+  fieldArea String
+  message   String?  @db.Text()
+  email     String?  @db.VarChar(255)
+  whatsapp  String?  @db.VarChar(20)
+  // published Boolean  @default(false)
+  // author    User     @relation(fields: [authorId], references: [id])
+  // authorId  Int
+}
