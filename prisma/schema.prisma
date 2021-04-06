@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -13,7 +13,7 @@ generator client {
 // Example models
 // https://www.prisma.io/docs/getting-started/setup-prisma/start-from-scratch-typescript-postgres#create-database-tables-with-prisma-migrate
 
-model ProspectInterview {
+model InterviewProspect {
   id        Int      @default(autoincrement()) @id
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

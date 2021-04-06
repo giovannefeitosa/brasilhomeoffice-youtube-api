@@ -1,0 +1,19 @@
+version: "3.7"
+
+services:
+  mariadb:
+    container_name: bho_youtube_api
+    image: mariadb:10.5
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: youtube-db
+      MYSQL_USER: youtube-db-user
+      MYSQL_PASSWORD: youtube-db-pass
+    volumes:
+      - bho_youtube_api_volume:/var/lib/mysql
+
+volumes:
+  bho_youtube_api_volume:
