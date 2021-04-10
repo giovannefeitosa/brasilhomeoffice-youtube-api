@@ -1,17 +1,6 @@
-import { GraphQLDateTime } from 'graphql-iso-date'
 import { Context } from '../context'
 
 export const typeDef = `
-  type Mutation {
-    createInterviewProspect(
-      name: String!
-      fieldArea: String!
-      message: String
-      email: String
-      whatsapp: String
-    ): InterviewProspect
-  }
-
   type InterviewProspect {
     id: Int
     createdAt: DateTime
@@ -22,21 +11,21 @@ export const typeDef = `
     email: String
     whatsapp: String
   }
-
-  type Query {
-    allInterviewProspects: [InterviewProspect!]!
-  }
-
-  scalar DateTime
 `;
 
-interface InterviewProspectCreateInput {
-  name: string;
-  fieldArea: string;
-  message?: string;
-  email?: string;
-  whatsapp?: string;
-}
+export const Mutation = `
+  createInterviewProspect(
+    name: String!
+    fieldArea: String!
+    message: String
+    email: String
+    whatsapp: String
+  ): InterviewProspect
+`;
+
+export const Query = `
+  allInterviewProspects: [InterviewProspect!]!
+`;
 
 export const resolvers = {
   Query: {
@@ -65,5 +54,12 @@ export const resolvers = {
       });
     },
   },
-  DateTime: GraphQLDateTime,
+}
+
+interface InterviewProspectCreateInput {
+  name: string;
+  fieldArea: string;
+  message?: string;
+  email?: string;
+  whatsapp?: string;
 }
