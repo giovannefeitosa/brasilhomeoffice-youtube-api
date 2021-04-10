@@ -6,5 +6,5 @@
 # a Dockerfile and docker-compose.yml
 # So you can run this inside your container
 
-docker exec youtube-api-container cd /app && npm run migrate:dev 
+docker exec youtube-api /bin/sh -c "cd /app && npm run migrate:dev && npm run prisma:generate"
 

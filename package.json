@@ -9,7 +9,8 @@
   "private": true,
   "scripts": {
     "dev": "yarn migrate:dev && nodemon src/index.ts",
-    "migrate:dev": "npx prisma migrate dev"
+    "migrate:dev": "npx prisma migrate dev",
+    "prisma:generate": "prisma generate"
   },
   "devDependencies": {
     "@types/graphql-iso-date": "^3.4.0",

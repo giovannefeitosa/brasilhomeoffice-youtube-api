@@ -7,6 +7,21 @@ const appSecret = process.env.FB_APP_SECRET as string;
 export type FBUser = {
   id: string;
   email: string;
+  name: string;
+  gender?: string;
+  hometown?: {
+    id: string;
+    name: string;
+  };
+  birthday?: string;
+  picture?: {
+    data: {
+      height: number;
+      width: number;
+      is_shilhouette: boolean;
+      url: string;
+    }
+  };
 };
 
 export async function fbGetUser(accessToken: string, userID: string = ''): Promise<FBUser> {
@@ -17,8 +32,5 @@ export async function fbGetUser(accessToken: string, userID: string = ''): Promi
   const res = await axios.get(`https://graph.facebook.com/me?${qs.join('&')}`);
   console.log('resData: ', res.data);
   
-  return {
-    id: res.data.id,
-    email: res.data.email,
-  };
+  return res.data as FBUser;
 }
