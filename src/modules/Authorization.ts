@@ -21,12 +21,6 @@ export const typeDef = `
 `;
 
 export const Mutation = `
-  # requestAuthorization(
-  #   provider: String!
-  #   username: String!
-  #   password: String!
-  # ): Authorization
-
   facebookLogin(
     accessToken: String!
     userID: String!
@@ -50,6 +44,7 @@ export const resolvers = {
       let user: User;
 
       try {
+        // Fetch user from db
         user = await context.prisma.user.findFirst({
           where: {
             facebookId: data.userID,
@@ -57,7 +52,7 @@ export const resolvers = {
           rejectOnNotFound: true,
         });
       } catch(error) {
-        console.log('gql error = ', error);
+        // If user was not not found
         if (String(error).indexOf('NotFoundError') > -1) {
           user = await context.prisma.user.create({
             data: {
@@ -73,23 +68,9 @@ export const resolvers = {
             },
           });
         } else {
+          // Unknown error
           throw error;
         }
-        // return {
-        //   accessToken: String(error),
-        //   user: {
-        //     id: 1,
-        //     birthday: null,
-        //     city: '',
-        //     country: '',
-        //     email: 'xx',
-        //     facebookId: '',
-        //     gender: '',
-        //     googleId: '',
-        //     name: 'xx',
-        //     thumbnail: '',
-        //   }
-        // }
       }
 
       if (user) {
@@ -99,20 +80,9 @@ export const resolvers = {
         };
       }
 
+      // Unknown error
       throw new Error('Não foi possível fazer login no momento');
     },
-    // requestAuthorization: (
-    //   _parent,
-    //   data: AuthorizationInput,
-    //   context: Context,
-    // ) => {
-    //   return (
-    //     {
-    //       userId: 1,
-    //       accessToken: JSON.stringify({ data, context }),
-    //     } as Authorization
-    //   );
-    // },
   },
 }
 
