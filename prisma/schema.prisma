@@ -26,3 +26,16 @@ model InterviewProspect {
   // author    User     @relation(fields: [authorId], references: [id])
   // authorId  Int
 }
+
+model User {
+  id Int @default(autoincrement()) @id
+  name String
+  email String
+  gender String?
+  city String?
+  country String?
+  birthday DateTime?
+  thumbnail String?
+  facebookId String?
+  googleId String?
+}

@@ -8,7 +8,7 @@ export const typeDef = `
   }
 
   type User {
-    id: Number
+    id: Int
     name: String
     email: String
     gender: String
@@ -42,6 +42,8 @@ export const resolvers = {
       context: Context,
     ): Promise<Authorization> => {
       const user = await fbGetUser(data.accessToken, data.userID);
+
+      // @TODO ~ Find or create user in database
 
       return {
         accessToken: JSON.stringify(user, null, 2),
@@ -92,4 +94,6 @@ interface User {
   country?: string;
   birthday?: string;
   thumbnail?: string;
+  facebookId?: string;
+  googleId?: string;
 }

@@ -3,6 +3,7 @@ import axios from "axios";
 const appId = process.env.FB_APP_ID as string;
 const appSecret = process.env.FB_APP_SECRET as string;
 
+// @TODO ~ Put other fields here
 export type FBUser = {
   id: string;
   email: string;
