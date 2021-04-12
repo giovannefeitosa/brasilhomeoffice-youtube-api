@@ -9,6 +9,7 @@
   "private": true,
   "scripts": {
     "dev": "yarn migrate:dev && nodemon src/index.ts",
+    "t": "ts-node src/test.ts",
     "migrate:dev": "npx prisma migrate dev",
     "prisma:generate": "prisma generate"
   },
@@ -25,6 +26,7 @@
     "axios": "^0.21.1",
     "graphql": "^15.5.0",
     "graphql-iso-date": "^3.6.1",
+    "jsonwebtoken": "^8.5.1",
     "prisma": "^2.20.1"
   }
 }

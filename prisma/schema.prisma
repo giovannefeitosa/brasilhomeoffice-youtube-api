@@ -13,6 +13,9 @@ generator client {
 // Example models
 // https://www.prisma.io/docs/getting-started/setup-prisma/start-from-scratch-typescript-postgres#create-database-tables-with-prisma-migrate
 
+/////////////////////////////////////////////////////////////
+// module InterviewProspect
+
 model InterviewProspect {
   id        Int      @default(autoincrement()) @id
   createdAt DateTime @default(now())
@@ -27,10 +30,13 @@ model InterviewProspect {
   // authorId  Int
 }
 
+////////////////////////////////////////////////////////////
+// module Authorization
+
 model User {
-  id Int @default(autoincrement()) @id
+  id Int @id @default(autoincrement())
   name String
-  email String
+  email String @unique
   gender String?
   city String?
   country String?
@@ -38,4 +44,36 @@ model User {
   thumbnail String?
   facebookId String?
   googleId String?
+}
+
+////////////////////////////////////////////////////////////
+// module Pool
+
+model Pool {
+  id Int @id @default(autoincrement())
+  slug String @unique
+  title String
+  description String?
+  poolStatus Int @default(0) // 0)draft; 1)open_to_vote; 2)finished
+  options PoolOption[] @relation()
+  answers PoolAnswer[] @relation()
+  createdAt DateTime @default(now())
+}
+
+model PoolOption {
+  id Int @id @default(autoincrement())
+  pool Pool @relation(fields: [poolId], references: [id])
+  poolId Int
+  image String?
+  label String
+  value String?
+  votes Int @default(0)
+}
+
+model PoolAnswer {
+  id Int @id @default(autoincrement())
+  pool Pool @relation(fields: [poolId], references: [id])
+  poolId Int
+  userId Int
+  poolOptionId Int
 }

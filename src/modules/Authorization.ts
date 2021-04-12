@@ -1,6 +1,7 @@
 import { User } from '.prisma/client';
 import { Context } from '../context'
 import { fbGetUser } from '../lib/facebook';
+import jwt from '../lib/jwt';
 
 export const typeDef = `
   type Authorization {
@@ -27,9 +28,30 @@ export const Mutation = `
   ): Authorization
 `;
 
-export const Query = ``;
+export const Query = `
+  exchangeAccessToken(
+    accessToken: String!
+  ): Authorization!
+`;
 
 export const resolvers = {
+  Query: {
+    exchangeAccessToken: async (
+      _,
+      data: ExchangeAccessTokenInput,
+      context: Context,
+    ): Promise<Authorization> => {
+      const { uid } = jwt.decode(data.accessToken);
+      const user = await context.prisma.user.findFirst({
+        where: { id: uid },
+        rejectOnNotFound: true,
+      });
+      return {
+        accessToken: data.accessToken,
+        user,
+      };
+    },
+  },
   Mutation: {
     facebookLogin: async (
       _parent,
@@ -74,8 +96,10 @@ export const resolvers = {
       }
 
       if (user) {
+        const accessToken = jwt.encode({ uid: user.id });
+
         return {
-          accessToken: JSON.stringify(user, null, 2),
+          accessToken,
           user,
         };
       }
@@ -89,6 +113,10 @@ export const resolvers = {
 interface FacebookLoginInput {
   accessToken: string;
   userID: string;
+}
+
+interface ExchangeAccessTokenInput {
+  accessToken: string;
 }
 
 interface AuthorizationInput {
