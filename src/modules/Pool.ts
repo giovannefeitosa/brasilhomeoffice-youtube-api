@@ -10,7 +10,7 @@ export const typeDef = `
     title: String
     description: String
     poolStatus: Int
-    # options: [PoolOption!]
+    options: [PoolOption!]!
     # answers: [PoolAnswer!]
     # createdAt: DateTime
   }
@@ -48,6 +48,17 @@ export const Mutation = `
     value: String
   ): PoolOption
 
+  updatePoolOption(
+    id: Int!
+    image: String
+    label: String
+    value: String
+  ): PoolOption
+
+  deletePoolOption(
+    id: Int!
+  ): Boolean
+
   answerPool(
     poolId: Int!
     poolOptionId: Int!
@@ -72,13 +83,15 @@ export const resolvers = {
   Query: {
     poolBySlug: async (
       _,
-      data: any,
+      data: QueryPoolBySlug,
       context: Context,
     ): Promise<any> => {
-      console.log('sliuuuuug ================== ', data);
       const pool = await context.prisma.pool.findFirst({
         where: {
           slug: data.slug,
+        },
+        include: {
+          options: true,
         },
         rejectOnNotFound: true,
       });
@@ -124,6 +137,42 @@ export const resolvers = {
         },
       });
       return option;
+    },
+    updatePoolOption: async (
+      _,
+      {
+        id,
+        image,
+        label,
+        value,
+      }: any,
+      context: Context,
+    ): Promise<any> => {
+      const option = await context.prisma.poolOption.update({
+        where: {
+          id,
+        },
+        data: {
+          image,
+          label,
+          value,
+        },
+      });
+      return option;
+    },
+    deletePoolOption: async (
+      _,
+      {
+        id,
+      }: any,
+      context: Context,
+    ) => {
+      const option = await context.prisma.poolOption.delete({
+        where: {
+          id,
+        },
+      });
+      return true;
     },
     answerPool: async (
       _,
@@ -195,3 +244,7 @@ interface CreatePoolInput {
 //   OPEN_TO_VOTE,
 //   FINISHED,
 // }
+
+interface QueryPoolBySlug {
+  slug: string;
+}
