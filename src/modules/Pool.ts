@@ -1,5 +1,6 @@
 import { User } from '.prisma/client';
 import { context, Context } from '../context'
+import { ensureUser } from '../lib/auth';
 import { fbGetUser } from '../lib/facebook';
 import jwt from '../lib/jwt';
 
@@ -109,6 +110,8 @@ export const resolvers = {
       }: CreatePoolInput,
       context: Context,
     ): Promise<Pool> => {
+      await ensureUser(context);
+
       const pool = await context.prisma.pool.create({
         data: {
           slug,
@@ -128,6 +131,8 @@ export const resolvers = {
       }: any,
       context: Context,
     ): Promise<any> => {
+      await ensureUser(context);
+
       const option = await context.prisma.poolOption.create({
         data: {
           poolId,
@@ -148,6 +153,8 @@ export const resolvers = {
       }: any,
       context: Context,
     ): Promise<any> => {
+      await ensureUser(context);
+      
       const option = await context.prisma.poolOption.update({
         where: {
           id,
@@ -167,6 +174,8 @@ export const resolvers = {
       }: any,
       context: Context,
     ) => {
+      await ensureUser(context);
+
       const option = await context.prisma.poolOption.delete({
         where: {
           id,
@@ -182,7 +191,19 @@ export const resolvers = {
       }: any,
       context: Context,
     ): Promise<any> => {
+      await ensureUser(context);
+
       const userId = 1;
+      await context.prisma.poolOption.update({
+        where: {
+          id: poolOptionId,
+        },
+        data: {
+          votes: {
+            increment: 1,
+          },
+        },
+      })
       const answer = await context.prisma.poolAnswer.create({
         data: {
           userId,
@@ -197,6 +218,8 @@ export const resolvers = {
       { poolId }: any,
       context: Context,
     ): Promise<any> => {
+      await ensureUser(context);
+
       await context.prisma.pool.update({
         where: {
           id: poolId,
@@ -212,6 +235,8 @@ export const resolvers = {
       { poolId }: any,
       context: Context,
     ): Promise<any> => {
+      await ensureUser(context);
+      
       await context.prisma.pool.update({
         where: {
           id: poolId,

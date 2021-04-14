@@ -8,7 +8,7 @@
   "license": "ISC",
   "private": true,
   "scripts": {
-    "dev": "yarn migrate:dev && nodemon src/index.ts",
+    "dev": "nodemon src/index.ts",
     "t": "ts-node src/test.ts",
     "migrate:dev": "npx prisma migrate dev",
     "prisma:generate": "prisma generate"
