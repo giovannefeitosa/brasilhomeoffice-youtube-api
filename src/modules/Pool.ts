@@ -5,6 +5,11 @@ import { fbGetUser } from '../lib/facebook';
 import jwt from '../lib/jwt';
 
 export const typeDef = `
+  type PoolBySlugResponse {
+    pool: Pool!
+    userAnswerId: Int
+  }
+
   type Pool {
     id: Int
     slug: String
@@ -77,7 +82,7 @@ export const Mutation = `
 export const Query = `
   poolBySlug(
     slug: String!
-  ): Pool
+  ): PoolBySlugResponse
 `;
 
 export const resolvers = {
@@ -97,7 +102,28 @@ export const resolvers = {
         rejectOnNotFound: true,
       });
 
-      return pool;
+      let userAnswerId: number | null = null;
+
+      if (context.user) {
+        const poolAnswer = await context.prisma.poolAnswer.findFirst({
+          where: {
+            AND: {
+              poolId: pool.id,
+              userId: context.user.id,
+            },
+          },
+          select: {
+            id: true,
+          },
+        });
+
+        userAnswerId = poolAnswer ? poolAnswer.id : null;
+      }
+
+      return {
+        pool,
+        userAnswerId,
+      };
     },
   },
   Mutation: {
